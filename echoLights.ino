@@ -1,7 +1,7 @@
 // This #include statement was automatically added by the Particle IDE.
 #include "dotstar.h"
 
-#define NUMPIXELS 108 // Number of LEDs in strip
+#define NUMPIXELS 109 // Number of LEDs in strip
 #define DATAPIN   A4
 #define CLOCKPIN  A5
 
@@ -14,6 +14,7 @@ void setup() {
 
 
   Particle.function("lightsOn", turnOnLights);
+  Particle.function("lightsOff", turnOffLights);
 }
 
 
@@ -26,19 +27,18 @@ void loop() {
 }
 
 int turnOnLights(String command) {
-     strip.setPixelColor(head, color); // 'On' pixel at head
-    //   strip.setPixelColor(tail, 0);     // 'Off' pixel at tail
-      strip.show();                     // Refresh strip
-      delay(100);                        // Pause 20 milliseconds (~50 FPS)
+  int i = 0;
 
-      if(++head >= NUMPIXELS) {         // Increment head index.  Off end of strip?
-        head = 0;                       //  Yes, reset head index to start
-        if((color >>= 8) == 0)          //  Next color (R->G->B) ... past blue now?
-          color = 0xff0000;             //   Yes, reset to red
-      }
-      if(++tail >= NUMPIXELS) tail = 0; // Increment, reset tail index
+  for (i; i < NUMPIXELS; i++) {
+    strip.setPixelColor(i, color);
+  }
+  strip.show();
+  return 1;
 }
 
-int turnOffLights() {
-    strip.clear();
+int turnOffLights(String command) {
+  strip.clear();
+  strip.show();
+
+  return 1;
 }
